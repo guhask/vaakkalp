@@ -1,7 +1,3 @@
-
----
-
-```markdown
 # VaakKalp — Voice Legacy
 ## Preserving Humanity's Endangered Oral Heritage with Multi-Agent AI
 
@@ -153,6 +149,3 @@ This project was built as a Kaggle Capstone submission. Contributions welcome po
 MIT License — with the additional requirement that any derivative work must maintain
 community data sovereignty controls and cannot be used for commercial exploitation of
 indigenous cultural content without explicit community consent.
-```
-
----
