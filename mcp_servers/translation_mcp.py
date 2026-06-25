@@ -37,47 +37,41 @@ LOW_RESOURCE = {"tcx": "toda", "nll": "nihali", "gon": "gondi", "kfb": "kolami"}
 
 @mcp.tool()
 async def detect_language(audio_text: str) -> dict:
-    """Auto-detect language using Google Cloud Translation."""
-    if not GOOGLE_API_KEY:
-        return {"language_code": "und", "confidence": 0.0, "note": "No API key set"}
-    try:
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
-                GOOGLE_DETECT_URL,
-                params={"key": GOOGLE_API_KEY},
-                json={"q": audio_text},
-                timeout=10.0,
-            )
-            if r.status_code == 200:
-                det = r.json()["data"]["detections"][0][0]
-                return {
-                    "language_code": det["language"],
-                    "confidence": det["confidence"],
-                    "dialect_hint": INDIAN_LANGUAGES.get(det["language"], "Unknown"),
-                }
-    except Exception as e:
-        pass
-    return {"language_code": "und", "confidence": 0.0, "error": "Detection failed"}
+    """Auto-detect language from text using script analysis."""
+    devanagari = sum(1 for c in audio_text if '\u0900' <= c <= '\u097F')
+    tamil = sum(1 for c in audio_text if '\u0B80' <= c <= '\u0BFF')
+    telugu = sum(1 for c in audio_text if '\u0C00' <= c <= '\u0C7F')
+    total = max(len(audio_text), 1)
+
+    if devanagari / total > 0.3:
+        return {"language_code": "hi", "confidence": 0.85, "dialect_hint": "Hindi/Marathi", "script": "Devanagari"}
+    elif tamil / total > 0.3:
+        return {"language_code": "ta", "confidence": 0.90, "dialect_hint": "Tamil", "script": "Tamil"}
+    elif telugu / total > 0.3:
+        return {"language_code": "te", "confidence": 0.90, "dialect_hint": "Telugu", "script": "Telugu"}
+    return {"language_code": "en", "confidence": 0.70, "dialect_hint": "English or romanized", "script": "Latin"}
 
 
 @mcp.tool()
 async def translate_text(text: str, source_lang: str, target_lang: str) -> dict:
-    """Translate text using Google Cloud Translation API."""
-    if not GOOGLE_API_KEY:
-        return {"translated": f"[NO API KEY] {text}", "provider": "none"}
+    """Translate text using MyMemory free API (no billing required)."""
     try:
         async with httpx.AsyncClient() as client:
-            r = await client.post(
-                GOOGLE_TRANSLATE_URL,
-                params={"key": GOOGLE_API_KEY},
-                json={"q": text, "source": source_lang, "target": target_lang, "format": "text"},
+            r = await client.get(
+                "https://api.mymemory.translated.net/get",
+                params={"q": text, "langpair": f"{source_lang}|{target_lang}"},
                 timeout=10.0,
             )
             if r.status_code == 200:
-                translated = r.json()["data"]["translations"][0]["translatedText"]
-                return {"translated": translated, "source_lang": source_lang,
-                        "target_lang": target_lang, "provider": "google_translate"}
-    except Exception as e:
+                data = r.json()
+                translated = data.get("responseData", {}).get("translatedText", text)
+                return {
+                    "translated": translated,
+                    "source_lang": source_lang,
+                    "target_lang": target_lang,
+                    "provider": "mymemory_free",
+                }
+    except Exception:
         pass
     return {"translated": f"[TRANSLATION FAILED] {text}", "provider": "error"}
 
