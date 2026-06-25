@@ -13,7 +13,11 @@ except ImportError:
         def tool(self): return lambda f: f
         def run(self, **kw): pass
     mcp = FastMCP()
-from google.cloud import storage
+try:
+    from google.cloud import storage
+    GCS_AVAILABLE = True
+except ImportError:
+    GCS_AVAILABLE = False
 import json
 import os
 import uuid
@@ -90,7 +94,7 @@ async def store_archive(memoir_json: str, metadata: str) -> dict:
     # Store in GCS (production)
     public_url = None
     try:
-        if PROJECT_ID:
+        if PROJECT_ID and GCS_AVAILABLE:
             gcs_client = storage.Client(project=PROJECT_ID)
             bucket = gcs_client.bucket(GCS_BUCKET)
             blob = bucket.blob(f"memoirs/{archive_id}.json")
