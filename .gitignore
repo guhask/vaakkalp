@@ -4,3 +4,4 @@
 "*.pyc" 
 "diagnose.py" 
 "vaakkalp_capstone.md" 
+"session_data/"

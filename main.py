@@ -1,6 +1,6 @@
 """
 VaakKalp - Main Application Entry Point
-FastAPI app serving the VaakKalp multi-agent system.
+FastAPI app with persistent session memory across restarts.
 """
 
 from fastapi import FastAPI, HTTPException
@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uuid
 from agents.orchestrator import run_vaakkalp
+from session_store import get_session_context, append_message
 
 app = FastAPI(title="VaakKalp", description="Preserving Endangered Oral Heritage")
 
@@ -38,9 +39,24 @@ def health():
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     session_id = req.session_id or str(uuid.uuid4())
+
+    # Inject prior conversation context for memory across restarts
+    prior_context = get_session_context(session_id)
+    message_with_context = (
+        f"{prior_context}{req.message}" if prior_context else req.message
+    )
+
     try:
-        response = await run_vaakkalp(req.message, session_id, req.user_id)
+        response = await run_vaakkalp(
+            message_with_context, session_id, req.user_id
+        )
+
+        # Persist both turns to disk
+        append_message(session_id, req.user_id, "user", req.message)
+        append_message(session_id, req.user_id, "agent", response)
+
         return ChatResponse(response=response, session_id=session_id)
+
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
