@@ -42,7 +42,7 @@ VaakKalp is a multi-agent AI system built on Google's Agent Development Kit (ADK
 | Server | Wraps | Purpose |
 |--------|-------|---------|
 | UNESCO Language Atlas MCP | UNESCO API | Language criticality scoring |
-| Translation MCP | MyMemory Translation API | Low-resource language support |
+| Translation MCP | Google Translate + Bhashini | Low-resource language support |
 | Cultural Knowledge Graph MCP | Custom knowledge base | Cultural annotation |
 | Archive & Alert MCP | Cloud Storage + Notifications | Storage and researcher alerts |
 
@@ -51,7 +51,7 @@ VaakKalp is a multi-agent AI system built on Google's Agent Development Kit (ADK
 - [x] MCP Servers — 4 custom servers
 - [x] Antigravity — live endangered language processing demo
 - [x] Security features — consent workflow, guardrails, data sovereignty
-- [x] Deployability — Render with live public URL
+- [x] Deployability — Google Cloud Run with full observability
 - [x] Agent Skills — Cultural Interviewer + Cultural Archivist skills
 
 ## Project Structure
@@ -97,8 +97,9 @@ vaakkalp/
 
 ### Prerequisites
 - Python 3.11+
+- Google Cloud account with billing enabled
 - Google AI Studio API key
-- Google AI Studio API key (free at aistudio.google.com/apikey)
+- Google Cloud Translation API supporting all 22 scheduled Indian languages access (free registration at bhashini.gov.in)
 
 ### Local Setup
 ```bash
@@ -132,7 +133,7 @@ gcloud config set project YOUR_PROJECT_ID
 chmod +x deploy.sh
 ./deploy.sh
 
-# Your VaakKalp instance will be live at the Render URL printed on completion
+# Your VaakKalp instance will be live at the Cloud Run URL printed on completion
 ```
 
 ## Security Notes

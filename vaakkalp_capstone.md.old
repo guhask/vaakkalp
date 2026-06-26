@@ -76,7 +76,7 @@ this in real time.
                               │
           ┌───────────────────▼──────────────────────┐
           │         GOOGLE CLOUD DEPLOYMENT           │
-          │   Render + Vertex AI-ready + Cloud Storage │
+          │   Cloud Run + Vertex AI + Cloud Storage   │
           │   Cloud Logging + Cloud Monitoring        │
           └──────────────────────────────────────────-┘
 ```
@@ -251,14 +251,14 @@ EXPOSE 8080
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
-### Render Deployment
+### Cloud Run Deployment
 ```bash
 # File: deploy.sh
 # Step 1: Build container
 gcloud builds submit --tag gcr.io/$PROJECT_ID/vaakkalp
 
-# Step 2: Deploy to Render (or Cloud Run)
-# gcloud run deploy vaakkalp \
+# Step 2: Deploy to Cloud Run
+gcloud run deploy vaakkalp \
   --image gcr.io/$PROJECT_ID/vaakkalp \
   --platform managed \
   --region asia-south1 \
@@ -442,7 +442,8 @@ intended, and no further.
 
 ## Deployment: Production-Ready on Google Cloud (Day 5)
 
-VaakKalp is containerized with Docker and deployed on **Render**, with a Cloud Run-ready `deploy.sh` for production scale.
+VaakKalp is containerized with Docker and deployed on **Google Cloud Run** in the
+`asia-south1` region, with **Vertex AI** as the model backend for all agent reasoning.
 **Google Cloud Storage** holds the audio archives and published memoirs.
 **Cloud Logging** captures every agent invocation, MCP call, and error with full
 traceability. **Cloud Monitoring** dashboards track active sessions, languages processed,
@@ -610,7 +611,7 @@ registered researchers.*
 **[3:30–4:15] — THE BUILD**
 
 *"VaakKalp is built entirely on Google's Agent Development Kit. The four MCP Servers
-connect to the UNESCO Language Atlas, MyMemory Translation API for low-resource
+connect to the UNESCO Language Atlas, Google Translate and Bhashini for low-resource
 Indian languages, a Cultural Knowledge Graph, and our archive storage.*
 
 [Show code — brief highlight of orchestrator.py and one MCP server]
@@ -618,9 +619,10 @@ Indian languages, a Cultural Knowledge Graph, and our archive storage.*
 *"Security is built-in: informed consent in the speaker's own language, sacred content
 protection, PII masking, and four-tier data sovereignty controls.*
 
-*VaakKalp is deployed on Render, with a Cloud Run-ready Dockerfile and deploy.sh for production scale. One command deploys the entire system.*
+*VaakKalp is deployed on Google Cloud Run, backed by Vertex AI, with full Cloud
+Logging observability. One script deploys the entire system.*
 
-[Show Render deployment, live public URL appearing]"*
+[Show deploy.sh running, Cloud Run URL appearing]"*
 
 ---
 
@@ -689,7 +691,7 @@ VaakKalp is a multi-agent AI system built on Google's Agent Development Kit (ADK
 | Server | Wraps | Purpose |
 |--------|-------|---------|
 | UNESCO Language Atlas MCP | UNESCO API | Language criticality scoring |
-| Translation MCP | MyMemory Translation API | Low-resource language support |
+| Translation MCP | Google Translate + Bhashini | Low-resource language support |
 | Cultural Knowledge Graph MCP | Custom knowledge base | Cultural annotation |
 | Archive & Alert MCP | Cloud Storage + Notifications | Storage and researcher alerts |
 
@@ -698,7 +700,7 @@ VaakKalp is a multi-agent AI system built on Google's Agent Development Kit (ADK
 - [x] MCP Servers — 4 custom servers
 - [x] Antigravity — live endangered language processing demo
 - [x] Security features — consent workflow, guardrails, data sovereignty
-- [x] Deployability — Render with live public URL
+- [x] Deployability — Google Cloud Run with full observability
 - [x] Agent Skills — Cultural Interviewer + Cultural Archivist skills
 
 ## Project Structure
@@ -744,8 +746,9 @@ vaakkalp/
 
 ### Prerequisites
 - Python 3.11+
+- Google Cloud account with billing enabled
 - Google AI Studio API key
-- Google AI Studio API key (free at aistudio.google.com/apikey)
+- Google Cloud Translation API supporting all 22 scheduled Indian languages access (free registration at bhashini.gov.in)
 
 ### Local Setup
 ```bash
@@ -803,18 +806,18 @@ indigenous cultural content without explicit community consent.
 
 | Day | Date | Focus | Deliverable | Done? |
 |-----|------|-------|-------------|-------|
-| 1 | Jun 21 | Repo setup, ADK environment, project scaffold | GitHub repo live, venv working | ✅ |
-| 2 | Jun 22 | Orchestrator Agent + session state management | Orchestrator routes to stub agents | ✅ |
-| 3 | Jun 23 | Interview Conductor Agent + question bank | Agent conducts 5-turn interview | ✅ |
-| 4 | Jun 24 | Long-term memory across sessions (Day 3) | Session resumption working | ✅ |
-| 5 | Jun 25 | Transcription & Translation Agent | Audio→text + language detect working | ✅ |
-| 6 | Jun 26 | Translation MCP Server (MyMemory API — free, no billing) | MCP connected and tested | ✅ |
-| 7 | Jun 27 | Cultural Enricher Agent | Annotations on 20 test phrases | ✅ |
-| 8 | Jun 28 | Cultural Knowledge Graph MCP Server | MCP connected, 100 entries seeded | ✅ |
-| 9 | Jun 29 | Story Organizer Agent | 6-chapter memoir generated from test transcript | ✅ |
-| 10 | Jun 30 | Archive Publisher Agent + Cloud Storage | Memoir stored, URL generated | ✅ |
-| 11 | Jul 1 | UNESCO Language Atlas MCP + Preservation Alert Agent | Alert dispatched on test run | ✅ |
-| 12 | Jul 2 | Security: consent workflow + guardrails + PII masking | All 4 security layers active | ✅ |
+| 1 | Jun 21 | Repo setup, ADK environment, project scaffold | GitHub repo live, venv working | ☐ |
+| 2 | Jun 22 | Orchestrator Agent + session state management | Orchestrator routes to stub agents | ☐ |
+| 3 | Jun 23 | Interview Conductor Agent + question bank | Agent conducts 5-turn interview | ☐ |
+| 4 | Jun 24 | Long-term memory across sessions (Day 3) | Session resumption working | ☐ |
+| 5 | Jun 25 | Transcription & Translation Agent | Audio→text + language detect working | ☐ |
+| 6 | Jun 26 | Translation MCP Server (Google Translate + Bhashini) | MCP connected and tested | ☐ |
+| 7 | Jun 27 | Cultural Enricher Agent | Annotations on 20 test phrases | ☐ |
+| 8 | Jun 28 | Cultural Knowledge Graph MCP Server | MCP connected, 100 entries seeded | ☐ |
+| 9 | Jun 29 | Story Organizer Agent | 6-chapter memoir generated from test transcript | ☐ |
+| 10 | Jun 30 | Archive Publisher Agent + Cloud Storage | Memoir stored, URL generated | ☐ |
+| 11 | Jul 1 | UNESCO Language Atlas MCP + Preservation Alert Agent | Alert dispatched on test run | ☐ |
+| 12 | Jul 2 | Security: consent workflow + guardrails + PII masking | All 4 security layers active | ☐ |
 | 13 | Jul 3 | Kaggle writeup draft + README polish | Writeup saved as draft | ✅ |
 | 14 | Jul 4 | Video script rehearsal + demo prep | Demo flow confirmed | ✅ |
 | 15 | Jul 5 AM | Record video (≤5 min) → Upload to YouTube + Render deployment | YouTube link live + public URL | ☐ |
@@ -873,7 +876,9 @@ other entries:
    are for communication. VaakKalp scores both: rigorous architecture AND a story that
    makes judges feel something.
 
-6. **Google ecosystem alignment** — Gemini 2.5 Flash-Lite, Vertex AI-ready architecture, Cloud Run deployment script — this is a fully Google-native stack. Judges from Google will recognize and appreciate this.
+6. **Google ecosystem alignment** — Google Translate, Bhashini (which Google supports),
+   Vertex AI, Cloud Run, Cloud Storage — this is a fully Google-native stack. Judges from
+   Google will recognize and appreciate this.
 
 ---
 
