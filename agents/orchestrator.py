@@ -5,6 +5,10 @@ Demonstrates: Hierarchical agent composition, long-term memory (Day 3).
 """
 
 import os
+import google.generativeai as genai
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+import os
 import uuid
 from dotenv import load_dotenv
 

@@ -8,7 +8,7 @@
     },
     {
       "role": "agent",
-      "text": "I am VaakKalp's Orchestrator, here to help preserve endangered languages and oral traditions. Your stories are invaluable.\n\nTo begin, could you please share:\n\n1.  Your name?\n2.  The name of the language or dialect you speak?\n3.  Your approximate age?\n4.  Your consent level for sharing this recording? (Options: public, researcher, community, family, restricted)"
+      "text": "Welcome! I am VaakKalp's Orchestrator, here to help preserve the precious oral traditions and languages of our world.\n\nTo begin, could you please share:\n1. Your name (or a name you'd like to be known by).\n2. The language or dialect you speak.\n3. Your approximate age.\n4. Your consent level for sharing this recording (options: public, researcher, community, family, restricted)."
     },
     {
       "role": "user",
@@ -17,14 +17,6 @@
     {
       "role": "agent",
       "text": "I'm here and listening. Please continue."
-    },
-    {
-      "role": "user",
-      "text": "My name is Vasamalli, I speak Toda, I am 82 years old, consent is researcher"
-    },
-    {
-      "role": "agent",
-      "text": "Thank you, Vasamalli. It's an honor to speak with you. We will proceed with the interview with your consent level set to 'researcher'.\n\nLet's begin with your childhood. Can you tell me about your earliest memories?\n"
     }
   ]
 }
