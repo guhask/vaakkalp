@@ -6,6 +6,7 @@ FastAPI app with persistent session memory across restarts.
 import os
 print(f"API KEY SET: {'Yes' if os.getenv('GOOGLE_API_KEY') else 'NO - MISSING'}")
 
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
